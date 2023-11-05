@@ -1,7 +1,8 @@
-extends Node2D
+extends Sprite2D
 
 var selected = false
-#var rest_point
+var in_hand = false
+var rest_point: Vector2  # TODO this needs to be a location provided by a hand!
 #var rest_nodes = []
 
 # Called when the node enters the scene tree for the first time.
@@ -15,13 +16,13 @@ func _on_control_gui_input(_event):
 		selected = true
 #		move_to_front()
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(delta):
 	if selected:
 		global_position = lerp(global_position, get_global_mouse_position(), 25 * delta)
+		rotation = lerp_angle(rotation, 0, 10 * delta)
 #		look_at(get_global_mouse_position())
-#	else:
-#		global_position = lerp(global_position, rest_point, 10 * delta)
+	elif in_hand:
+		global_position = lerp(global_position, rest_point, 10 * delta)
 #		rotation = lerp_angle(rotation, 0, 10 * delta)
 
 func _input(event):
@@ -37,3 +38,10 @@ func _input(event):
 #					shortest_dist = distance
 
 
+func _on_hand_collect_tile_into_hand(lerp_to: Vector2) -> void:
+	in_hand = true
+	rest_point = lerp_to
+
+
+func _on_hand_remove_tile_from_hand():
+	in_hand = false
