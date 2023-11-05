@@ -1,0 +1,96 @@
+{
+    "frame_resolution": {
+        "v": 24,
+        "h": 9,
+    },
+
+    "frame_groups": {
+        "dice": {
+            "1": [0, 0],
+            "2": [0, 1],
+            "3": [0, 2],
+            "4": [0, 3],
+            "5": [0, 4],
+            "6": [0, 5],
+            "blank": [0, 6],
+        },
+
+        "todo_what_are_these": {
+            "todo_1": [1, 0],
+            "todo_2": [1, 1],
+            "todo_3": [1, 2],
+            "todo_4": [1, 3],
+        },
+
+        "blank_tiles": {
+            "bottom_reverse": [2, 0],
+            "bottom_obverse": [2, 1],
+            "top_reverse": [2, 2],
+            "top_obverse": [2, 5],
+            "side_reverse": [2, 6],
+            "side_obverse": [2, 7],
+            "side_standing": [2, 8],
+        },
+
+        "krak": {
+            "top": 3,
+            "bottom": 8,
+            "side": 13,
+            "upside_down": 18,
+        },
+
+        "bamboo": {
+            "top": 4,
+            "bottom": 9,
+            "side": 14,
+            "upside_down": 19,
+        },
+
+        "dots": {
+            "top": 5,
+            "bottom": 10,
+            "side": 15,
+            "upside_down": 20,
+        },
+
+        "winds": {
+            "top": {
+                "east": [6, 0],
+                "south": [6, 1],
+                "west": [6, 2],
+                "north": [6, 3],
+            },
+
+            "bottom": {
+                "east": [11, 0],
+                "south": [11, 1],
+                "west": [11, 2],
+                "north": [11, 3],
+            },
+
+            "side": {
+                "east": [16, 0],
+                "south": [16, 1],
+                "west": [16, 2],
+                "north": [16, 3],
+            },
+
+            "upside_down": {
+                "east": [21, 0],
+                "south": [21, 1],
+                "west": [21, 2],
+                "north": [21, 3],
+            }
+        },
+
+        "misc": {
+            "question_mark": {
+                "top": [6, 8],
+                "bottom": [11, 8],
+                "side": [16, 8],
+                "upside_down": [21, 8],
+            }
+        }
+
+    },
+}
