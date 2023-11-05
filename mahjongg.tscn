@@ -1,10 +1,11 @@
-[gd_scene load_steps=2 format=3 uid="uid://n6kvqq1jqvt8"]
+[gd_scene load_steps=3 format=3 uid="uid://n6kvqq1jqvt8"]
 
 [ext_resource type="PackedScene" uid="uid://cc1i1xvom5elb" path="res://tile.tscn" id="1_u8cfa"]
+[ext_resource type="PackedScene" uid="uid://cj1j45s4tfwt1" path="res://hand.tscn" id="2_0raqi"]
 
 [node name="Mahjongg" type="Node"]
 
-[node name="ColorRect" type="ColorRect" parent="."]
+[node name="Background" type="ColorRect" parent="."]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -13,5 +14,11 @@ grow_vertical = 2
 mouse_filter = 1
 color = Color(0.215686, 0.635294, 0.345098, 1)
 
+[node name="Hand" parent="." instance=ExtResource("2_0raqi")]
+
 [node name="Tile" parent="." instance=ExtResource("1_u8cfa")]
-position = Vector2(490, 220)
+position = Vector2(664, 337)
+frame = 27
+
+[node name="Tile2" parent="." instance=ExtResource("1_u8cfa")]
+position = Vector2(790, 393)

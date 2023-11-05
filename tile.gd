@@ -10,11 +10,10 @@ var selected = false
 #	rest_point = rest_nodes[0].global_position  # Default resting position (may not be necessary)
 #	rest_nodes[0].select()  # Update color indicators
 
-
-func _on_area_2d_input_event(_viewport, _event, _shape_idx):
-	print('.')
+func _on_control_gui_input(_event):
 	if Input.is_action_just_pressed("click"):
 		selected = true
+#		move_to_front()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(delta):
@@ -36,3 +35,5 @@ func _input(event):
 #					child.select()
 #					rest_point = child.global_position
 #					shortest_dist = distance
+
+
