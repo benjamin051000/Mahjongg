@@ -19,7 +19,7 @@ func _ready():
 func _on_control_gui_input(_event):
 	if Input.is_action_just_pressed("click"):
 		selected = true
-#		move_to_front()
+		move_to_front()
 
 func _physics_process(delta):
 	if selected:
