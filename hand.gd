@@ -1,7 +1,8 @@
 extends Area2D
 
-signal collect_tile_into_hand(lerp_to: Vector2)
-signal remove_tile_from_hand
+#signal collect_tile_into_hand(lerp_to: Vector2)
+#signal remove_tile_from_hand
+# Use the SignalBus from now on!
 
 # TODO what if you draw flowers? There are 8 total (?)
 const MAX_HAND_SIZE = 14
@@ -28,7 +29,8 @@ func _on_area_entered(area: Area2D) -> void:
 	var x_offset = position.x - $ColorRect.size.x / 2
 	var next_open_slot_x = hand_size * WIDTH_PER_TILE + x_offset
 	var location_to_lerp_to = Vector2(next_open_slot_x, position.y)  # TODO the next available slot
-	emit_signal("collect_tile_into_hand", location_to_lerp_to)
+#	emit_signal("collect_tile_into_hand", location_to_lerp_to)
+	SignalBus.tile_added_to_hand.emit(area, location_to_lerp_to)
 
 
 
@@ -36,4 +38,5 @@ func _on_area_exited(area: Area2D):
 	print("bye from the hand")
 	hand_size -= 1
 	print("hand size:", hand_size)
-	emit_signal("remove_tile_from_hand")
+#	emit_signal("remove_tile_from_hand")
+	SignalBus.tile_removed_from_hand.emit()

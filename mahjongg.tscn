@@ -1,11 +1,11 @@
 [gd_scene load_steps=4 format=3 uid="uid://n6kvqq1jqvt8"]
 
-[ext_resource type="Script" path="res://mahjongg.gd" id="1_2vnlt"]
+[ext_resource type="Script" path="res://signal_bus.gd" id="1_q1s8j"]
 [ext_resource type="PackedScene" uid="uid://cc1i1xvom5elb" path="res://tile.tscn" id="1_u8cfa"]
 [ext_resource type="PackedScene" uid="uid://c8vea6e7sskb5" path="res://hand.tscn" id="2_0raqi"]
 
 [node name="Mahjongg" type="Node"]
-script = ExtResource("1_2vnlt")
+script = ExtResource("1_q1s8j")
 
 [node name="Background" type="ColorRect" parent="."]
 anchors_preset = 15
@@ -28,5 +28,14 @@ frame = 27
 [node name="Tile2" parent="." instance=ExtResource("1_u8cfa")]
 position = Vector2(624, 379)
 
-[connection signal="collect_tile_into_hand" from="Hand" to="Tile" method="_on_hand_collect_tile_into_hand"]
-[connection signal="remove_tile_from_hand" from="Hand" to="Tile" method="_on_hand_remove_tile_from_hand"]
+[node name="Tile3" parent="." instance=ExtResource("1_u8cfa")]
+position = Vector2(624, 379)
+
+[node name="Tile4" parent="." instance=ExtResource("1_u8cfa")]
+position = Vector2(624, 379)
+
+[node name="Tile5" parent="." instance=ExtResource("1_u8cfa")]
+position = Vector2(624, 379)
+
+[node name="Tile6" parent="." instance=ExtResource("1_u8cfa")]
+position = Vector2(624, 379)

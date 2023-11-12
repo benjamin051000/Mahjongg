@@ -1,12 +1,16 @@
 extends Sprite2D
 
 var selected = false
+
 var in_hand = false
-var rest_point: Vector2  # TODO this needs to be a location provided by a hand!
+var rest_point: Vector2  # This is provided by a hand.
 #var rest_nodes = []
 
 # Called when the node enters the scene tree for the first time.
-#func _ready():
+func _ready():
+	SignalBus.tile_added_to_hand.connect(_on_hand_collect_tile_into_hand)
+	SignalBus.tile_removed_from_hand.connect(_on_hand_remove_tile_from_hand)
+	
 #	rest_nodes = get_tree().get_nodes_in_group("zone")
 #	rest_point = rest_nodes[0].global_position  # Default resting position (may not be necessary)
 #	rest_nodes[0].select()  # Update color indicators
@@ -38,10 +42,16 @@ func _input(event):
 #					shortest_dist = distance
 
 
-func _on_hand_collect_tile_into_hand(lerp_to: Vector2) -> void:
+func _on_hand_collect_tile_into_hand(tile: Area2D, lerp_to: Vector2) -> void:
+	# Skip if the signal isn't for me.
+	if tile != $Area2D:
+		return
+		
+	print("[Tile] updating rest point...")
 	in_hand = true
 	rest_point = lerp_to
 
 
 func _on_hand_remove_tile_from_hand():
+	print("[Tile] out of hand")
 	in_hand = false
