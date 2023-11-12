@@ -10,6 +10,7 @@ var rest_point: Vector2  # This is provided by a hand.
 func _ready():
 	SignalBus.tile_added_to_hand.connect(_on_hand_collect_tile_into_hand)
 	SignalBus.tile_removed_from_hand.connect(_on_hand_remove_tile_from_hand)
+	SignalBus.hand_reorder_tiles.connect(_on_hand_reorder_tiles)
 	
 #	rest_nodes = get_tree().get_nodes_in_group("zone")
 #	rest_point = rest_nodes[0].global_position  # Default resting position (may not be necessary)
@@ -46,12 +47,22 @@ func _on_hand_collect_tile_into_hand(tile: Area2D, lerp_to: Vector2) -> void:
 	# Skip if the signal isn't for me.
 	if tile != $Area2D:
 		return
-		
-	print("[Tile] updating rest point...")
+	
 	in_hand = true
+	
+	print("[Tile] updating rest point...")
 	rest_point = lerp_to
 
 
-func _on_hand_remove_tile_from_hand():
+func _on_hand_remove_tile_from_hand(tile: Area2D):
+	# Skip if it isn't for me.
+	if tile != $Area2D:
+		return
+
 	print("[Tile] out of hand")
 	in_hand = false
+
+func _on_hand_reorder_tiles(area: Area2D, new_rest_point: Vector2):
+	if area != $Area2D:
+		return
+	rest_point = new_rest_point

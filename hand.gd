@@ -13,8 +13,16 @@ const TILE_PADDING = 4 # on both sides of one tile (so 2x in-between two tiles)
 const WIDTH_PER_TILE = 52 + TILE_PADDING * 2
 const hand_pad = TILE_PADDING + 52 / 2
 
-func _ready():
-	print(14 * WIDTH_PER_TILE)
+# This will assist us in reorganizing the tiles when a tile leaves the hand
+# (and all tiles on the right must shift left)
+class TileInfo:
+	var area: Area2D
+	var rest_point: Vector2
+	func _init(area: Area2D, rest_point: Vector2):
+		self.area = area
+		self.rest_point = rest_point
+	
+var tiles_in_hand = []
 
 var hand_size = 0
 
@@ -24,12 +32,35 @@ func _on_area_entered(area: Area2D) -> void:
 	
 	var x_start_of_hand = position.x - $ColorRect.size.x / 2
 	var next_open_slot_x = x_start_of_hand - hand_pad + hand_size * WIDTH_PER_TILE
-	var location_to_lerp_to = Vector2(next_open_slot_x, position.y)  # TODO the next available slot
-	SignalBus.tile_added_to_hand.emit(area, location_to_lerp_to)
-
+	var rest_point = Vector2(next_open_slot_x, position.y)  # TODO the next available slot
+	
+	tiles_in_hand.append(TileInfo.new(area, rest_point))
+	SignalBus.tile_added_to_hand.emit(area, rest_point)  # TODO use the class?
 
 
 func _on_area_exited(area: Area2D):
 	hand_size -= 1
 	print("hand size:", hand_size)
-	SignalBus.tile_removed_from_hand.emit()
+	SignalBus.tile_removed_from_hand.emit(area)
+	# Which tile was this in the list? 
+	var removed_tile_idx: int
+	for i in range(tiles_in_hand.size()):
+		if tiles_in_hand[i].area == area:
+			removed_tile_idx = i
+			break
+	
+	var last_rest_point = tiles_in_hand[removed_tile_idx].rest_point
+	
+	# After this, removed_tile_idx now contains the next Tile.
+	tiles_in_hand.remove_at(removed_tile_idx)
+	print("removed tile index ", removed_tile_idx)
+	# Shift all the tiles to the right of this one by one to the left.
+	# TODO what if it's the last tile?
+	for i in range(removed_tile_idx, tiles_in_hand.size()):
+		print("updating tile ", i)
+		var temp = tiles_in_hand[i].rest_point
+		tiles_in_hand[i].rest_point = last_rest_point
+		last_rest_point = temp
+		
+		SignalBus.hand_reorder_tiles.emit(tiles_in_hand[i].area, tiles_in_hand[i].rest_point)
+	
