@@ -22,20 +22,44 @@ position = Vector2(800, 855)
 metadata/_edit_lock_ = true
 
 [node name="Tile" parent="." instance=ExtResource("1_u8cfa")]
-position = Vector2(934, 356)
+position = Vector2(831, 721)
 frame = 27
 
 [node name="Tile2" parent="." instance=ExtResource("1_u8cfa")]
-position = Vector2(624, 379)
+position = Vector2(521, 744)
 
 [node name="Tile3" parent="." instance=ExtResource("1_u8cfa")]
-position = Vector2(624, 379)
+position = Vector2(521, 744)
 
 [node name="Tile4" parent="." instance=ExtResource("1_u8cfa")]
-position = Vector2(624, 379)
+position = Vector2(521, 744)
 
 [node name="Tile5" parent="." instance=ExtResource("1_u8cfa")]
-position = Vector2(624, 379)
+position = Vector2(521, 744)
 
 [node name="Tile6" parent="." instance=ExtResource("1_u8cfa")]
-position = Vector2(624, 379)
+position = Vector2(521, 744)
+
+[node name="Tile7" parent="." instance=ExtResource("1_u8cfa")]
+position = Vector2(521, 744)
+
+[node name="Tile8" parent="." instance=ExtResource("1_u8cfa")]
+position = Vector2(521, 744)
+
+[node name="Tile9" parent="." instance=ExtResource("1_u8cfa")]
+position = Vector2(521, 744)
+
+[node name="Tile10" parent="." instance=ExtResource("1_u8cfa")]
+position = Vector2(521, 744)
+
+[node name="Tile11" parent="." instance=ExtResource("1_u8cfa")]
+position = Vector2(521, 744)
+
+[node name="Tile12" parent="." instance=ExtResource("1_u8cfa")]
+position = Vector2(521, 744)
+
+[node name="Tile13" parent="." instance=ExtResource("1_u8cfa")]
+position = Vector2(521, 744)
+
+[node name="Tile14" parent="." instance=ExtResource("1_u8cfa")]
+position = Vector2(521, 744)

@@ -5,38 +5,31 @@ extends Area2D
 # Use the SignalBus from now on!
 
 # TODO what if you draw flowers? There are 8 total (?)
+# Well, flowers immediately go face up. So those probably don't count.
 const MAX_HAND_SIZE = 14
 
 # TODO find a way to fetch this dynamically
-const WIDTH_PER_TILE = 52 + 6  # 3 px per side, so 6 between tiles
+const TILE_PADDING = 4 # on both sides of one tile (so 2x in-between two tiles)
+const WIDTH_PER_TILE = 52 + TILE_PADDING * 2
+const hand_pad = TILE_PADDING + 52 / 2
+
+func _ready():
+	print(14 * WIDTH_PER_TILE)
 
 var hand_size = 0
 
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	pass # Replace with function body.
-
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
-	pass
-
-
 func _on_area_entered(area: Area2D) -> void:
-	print("welcome to the hand!")
 	hand_size += 1
 	print("hand size:", hand_size)
-	var x_offset = position.x - $ColorRect.size.x / 2
-	var next_open_slot_x = hand_size * WIDTH_PER_TILE + x_offset
+	
+	var x_start_of_hand = position.x - $ColorRect.size.x / 2
+	var next_open_slot_x = x_start_of_hand - hand_pad + hand_size * WIDTH_PER_TILE
 	var location_to_lerp_to = Vector2(next_open_slot_x, position.y)  # TODO the next available slot
-#	emit_signal("collect_tile_into_hand", location_to_lerp_to)
 	SignalBus.tile_added_to_hand.emit(area, location_to_lerp_to)
 
 
 
 func _on_area_exited(area: Area2D):
-	print("bye from the hand")
 	hand_size -= 1
 	print("hand size:", hand_size)
-#	emit_signal("remove_tile_from_hand")
 	SignalBus.tile_removed_from_hand.emit()
