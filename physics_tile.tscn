@@ -1,0 +1,32 @@
+[gd_scene load_steps=4 format=3 uid="uid://dac60cfdcub7a"]
+
+[ext_resource type="Script" path="res://physics_tile.gd" id="1_4m488"]
+[ext_resource type="Texture2D" uid="uid://bp2um10jvhq4o" path="res://assets/RiichiAsset/RiichiAssetByGambleMountain/sheet.png" id="1_hma3b"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_1rrf2"]
+size = Vector2(18, 26)
+
+[node name="PhysicsTile" type="RigidBody2D"]
+script = ExtResource("1_4m488")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+scale = Vector2(3, 3)
+shape = SubResource("RectangleShape2D_1rrf2")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(3, 3)
+texture = ExtResource("1_hma3b")
+hframes = 9
+vframes = 24
+frame = 45
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_left = -27.0
+offset_top = -39.0
+offset_right = -9.0
+offset_bottom = -13.0
+scale = Vector2(3, 3)
+
+[connection signal="gui_input" from="Control" to="." method="_on_control_gui_input"]
