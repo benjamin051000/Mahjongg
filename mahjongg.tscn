@@ -57,13 +57,13 @@ position = Vector2(521, 744)
 position = Vector2(521, 744)
 
 [node name="Tile12" parent="." instance=ExtResource("1_u8cfa")]
-position = Vector2(521, 744)
+position = Vector2(591, 744)
 
 [node name="Tile13" parent="." instance=ExtResource("1_u8cfa")]
-position = Vector2(521, 744)
+position = Vector2(662, 742)
 
 [node name="Tile14" parent="." instance=ExtResource("1_u8cfa")]
-position = Vector2(521, 744)
+position = Vector2(732, 743)
 
 [node name="TitleScreen" parent="." instance=ExtResource("4_bf3qt")]
 position = Vector2(800, 400)
