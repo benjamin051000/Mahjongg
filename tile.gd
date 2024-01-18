@@ -47,6 +47,7 @@ func _on_control_gui_input(_event):
 	if Input.is_action_just_pressed("click") and not frozen:  # TODO does one of the nodes already have a frozen flag?
 		selected = true
 		move_to_front()
+		turn_face_up()
 
 func _physics_process(delta):
 	if selected:
@@ -54,7 +55,8 @@ func _physics_process(delta):
 		#rotation = lerp_angle(rotation, 0, 10 * delta)
 #		look_at(get_global_mouse_position())
 	#elif in_hand:
-	global_position = lerp(global_position, rest_point, 10 * delta)
+	else:
+		global_position = lerp(global_position, rest_point, 10 * delta)
 #		rotation = lerp_angle(rotation, 0, 10 * delta)
 
 func _input(event):

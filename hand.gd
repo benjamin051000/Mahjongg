@@ -18,9 +18,9 @@ const hand_pad = TILE_PADDING + 52 / 2
 class TileInfo:
 	var area: Area2D
 	var rest_point: Vector2
-	func _init(area: Area2D, rest_point: Vector2):
-		self.area = area
-		self.rest_point = rest_point
+	func _init(area_: Area2D, rest_point_: Vector2):
+		self.area = area_
+		self.rest_point = rest_point_
 	
 var tiles_in_hand = []
 
