@@ -3,6 +3,7 @@ extends Sprite2D
 # Tile properties
 var suit: String
 var value: int
+var faceup: bool
 
 # Interaction and location parameters
 var selected = false
@@ -22,6 +23,7 @@ func unfreeze():
 
 func turn_face_down():
 	frame_coords = Vector2(0, 2)
+	faceup = false
 
 
 func turn_face_up():
@@ -29,8 +31,24 @@ func turn_face_up():
 	const suits = ["crak", "boo", "dot", "honor"] # TODO BUG TERRIBLE! THIS IS NOT SHARED WITH ONE IN mahjongg.gd!!!
 	const first_suit_offset = 3
 	frame_coords = Vector2(value, first_suit_offset + suits.find(suit))
+	faceup = true
 
 
+func change_perspective(perspective: String):
+	# There are y values
+	const sprite_perspective_offsets_faceup = {"bottom": 1, "right": 3, "top": 0, "left": 2}
+	# These are x values
+	const sprite_perspective_offsets_facedown = {"bottom": 0, "right": 6, "top": 2, "left": 6}
+	if perspective not in sprite_perspective_offsets_facedown and perspective not in sprite_perspective_offsets_faceup:
+		print("ERROR")
+		get_tree().quit(1)
+		
+	if faceup:
+		frame_coords.y = 3 + sprite_perspective_offsets_faceup[perspective]
+	else:
+		frame_coords.x = sprite_perspective_offsets_facedown[perspective]
+	
+	
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	SignalBus.tile_added_to_hand.connect(_on_hand_collect_tile_into_hand)
