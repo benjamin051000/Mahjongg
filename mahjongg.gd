@@ -9,7 +9,8 @@ func spawn_tiles():
 				var tile = tile_scene.instantiate()
 				tile.suit = suit
 				tile.value = value
-				tile.position = Vector2(300 + 50 * (value + i), 200 + 100 * suits.find(suit))
+				#tile.position = Vector2(300 + 50 * (value + i), 200 + 100 * suits.find(suit))
+				tile.position = Vector2(randi_range(100, 1500), randi_range(100, 700))
 				tile.rest_point = tile.position
 				tile.frozen = true
 				tile.add_to_group("tiles")
@@ -22,7 +23,7 @@ func spawn_tiles():
 			var tile = tile_scene.instantiate()
 			tile.suit = "honor"
 			tile.value = value
-			tile.position = Vector2(randi_range(100, 400), randi_range(600, 800))
+			tile.position = Vector2(randi_range(100, 1500), randi_range(100, 700))
 			tile.rest_point = tile.position
 			tile.frozen = true
 			tile.add_to_group("tiles")
@@ -33,7 +34,7 @@ func spawn_tiles():
 		# TODO we don't have textures for these yet, so just use the ? tile for now I guess
 		tile.suit = "honor"
 		tile.value = 8
-		tile.position = Vector2(randi_range(1300, 1500), randi_range(100, 400))
+		tile.position = Vector2(randi_range(100, 1500), randi_range(100, 700))
 		tile.rest_point = tile.position
 		tile.frozen = true
 		tile.add_to_group("tiles")
@@ -71,7 +72,7 @@ func build_wall():
 			var tile = tiles.pop_front()
 			tile.rest_point = wall_first_spot_lower + tile_offset * i + wall_offset * n
 			tile.unfreeze()
-			await get_tree().create_timer(0.05).timeout # waits for 1 second
+			await get_tree().create_timer(0.03).timeout # waits for 1 second
 		
 		# Do it again, but slightly offset to show two levels
 		for i in wall_length:
@@ -79,7 +80,7 @@ func build_wall():
 			tile.move_to_front()
 			tile.unfreeze()
 			tile.rest_point = wall_first_spot_upper + tile_offset * i + wall_offset * n
-			await get_tree().create_timer(0.05).timeout # waits for 1 second
+			await get_tree().create_timer(0.03).timeout # waits for 1 second
  
 # Called when the node enters the scene tree for the first time.
 func _ready():
