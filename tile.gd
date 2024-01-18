@@ -1,7 +1,12 @@
 extends Sprite2D
 
-var selected = false
+# Tile properties
+var suit: String
+var value: int
 
+
+# Interaction and location parameters
+var selected = false
 var in_hand = false
 var rest_point: Vector2  # This is provided by a hand.
 #var rest_nodes = []
@@ -11,6 +16,11 @@ func _ready():
 	SignalBus.tile_added_to_hand.connect(_on_hand_collect_tile_into_hand)
 	SignalBus.tile_removed_from_hand.connect(_on_hand_remove_tile_from_hand)
 	SignalBus.hand_reorder_tiles.connect(_on_hand_reorder_tiles)
+	
+	# Get the right value based on what was set before calling add_child()
+	const suits = ["crak", "boo", "dot"] # TODO BUG TERRIBLE! THIS IS NOT SHARED WITH ONE IN mahjongg.gd!!!
+	const first_suit_offset = 3
+	frame_coords = Vector2(value, first_suit_offset + suits.find(suit))
 	
 #	rest_nodes = get_tree().get_nodes_in_group("zone")
 #	rest_point = rest_nodes[0].global_position  # Default resting position (may not be necessary)
@@ -24,7 +34,7 @@ func _on_control_gui_input(_event):
 func _physics_process(delta):
 	if selected:
 		global_position = lerp(global_position, get_global_mouse_position(), 25 * delta)
-		rotation = lerp_angle(rotation, 0, 10 * delta)
+		#rotation = lerp_angle(rotation, 0, 10 * delta)
 #		look_at(get_global_mouse_position())
 	elif in_hand:
 		global_position = lerp(global_position, rest_point, 10 * delta)
