@@ -18,7 +18,7 @@ func _ready():
 	SignalBus.hand_reorder_tiles.connect(_on_hand_reorder_tiles)
 	
 	# Get the right value based on what was set before calling add_child()
-	const suits = ["crak", "boo", "dot"] # TODO BUG TERRIBLE! THIS IS NOT SHARED WITH ONE IN mahjongg.gd!!!
+	const suits = ["crak", "boo", "dot", "honor"] # TODO BUG TERRIBLE! THIS IS NOT SHARED WITH ONE IN mahjongg.gd!!!
 	const first_suit_offset = 3
 	frame_coords = Vector2(value, first_suit_offset + suits.find(suit))
 	
