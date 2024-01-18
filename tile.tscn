@@ -11,7 +11,7 @@ scale = Vector2(3, 3)
 texture = ExtResource("1_4cug1")
 hframes = 9
 vframes = 24
-frame = 28
+frame = 62
 script = ExtResource("1_5r03k")
 
 [node name="Control" type="Control" parent="."]

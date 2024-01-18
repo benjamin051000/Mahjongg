@@ -4,12 +4,32 @@ extends Sprite2D
 var suit: String
 var value: int
 
-
 # Interaction and location parameters
 var selected = false
 var in_hand = false
 var rest_point: Vector2  # This is provided by a hand.
+var frozen = false
 #var rest_nodes = []
+
+
+func freeze():
+	frozen = true
+
+
+func unfreeze():
+	frozen = false
+
+
+func turn_face_down():
+	frame_coords = Vector2(0, 2)
+
+
+func turn_face_up():
+	# Get the right value based on what was set before calling add_child()
+	const suits = ["crak", "boo", "dot", "honor"] # TODO BUG TERRIBLE! THIS IS NOT SHARED WITH ONE IN mahjongg.gd!!!
+	const first_suit_offset = 3
+	frame_coords = Vector2(value, first_suit_offset + suits.find(suit))
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -17,17 +37,14 @@ func _ready():
 	SignalBus.tile_removed_from_hand.connect(_on_hand_remove_tile_from_hand)
 	SignalBus.hand_reorder_tiles.connect(_on_hand_reorder_tiles)
 	
-	# Get the right value based on what was set before calling add_child()
-	const suits = ["crak", "boo", "dot", "honor"] # TODO BUG TERRIBLE! THIS IS NOT SHARED WITH ONE IN mahjongg.gd!!!
-	const first_suit_offset = 3
-	frame_coords = Vector2(value, first_suit_offset + suits.find(suit))
-	
+	turn_face_up()
+		
 #	rest_nodes = get_tree().get_nodes_in_group("zone")
 #	rest_point = rest_nodes[0].global_position  # Default resting position (may not be necessary)
 #	rest_nodes[0].select()  # Update color indicators
 
 func _on_control_gui_input(_event):
-	if Input.is_action_just_pressed("click"):
+	if Input.is_action_just_pressed("click") and not frozen:  # TODO does one of the nodes already have a frozen flag?
 		selected = true
 		move_to_front()
 
@@ -36,8 +53,8 @@ func _physics_process(delta):
 		global_position = lerp(global_position, get_global_mouse_position(), 25 * delta)
 		#rotation = lerp_angle(rotation, 0, 10 * delta)
 #		look_at(get_global_mouse_position())
-	elif in_hand:
-		global_position = lerp(global_position, rest_point, 10 * delta)
+	#elif in_hand:
+	global_position = lerp(global_position, rest_point, 10 * delta)
 #		rotation = lerp_angle(rotation, 0, 10 * delta)
 
 func _input(event):

@@ -10,6 +10,8 @@ func spawn_tiles():
 				tile.suit = suit
 				tile.value = value
 				tile.position = Vector2(300 + 50 * (value + i), 200 + 100 * suits.find(suit))
+				tile.frozen = true
+				tile.add_to_group("tiles")
 				add_child(tile)
 	
 	# Winds and Dragons
@@ -20,6 +22,8 @@ func spawn_tiles():
 			tile.suit = "honor"
 			tile.value = value
 			tile.position = Vector2(randi_range(100, 400), randi_range(600, 800))
+			tile.frozen = true
+			tile.add_to_group("tiles")
 			add_child(tile)
 	# Flowers and Jokers
 	for i in 16:
@@ -28,8 +32,45 @@ func spawn_tiles():
 		tile.suit = "honor"
 		tile.value = 8
 		tile.position = Vector2(randi_range(1300, 1500), randi_range(100, 400))
+		tile.frozen = true
+		tile.add_to_group("tiles")
 		add_child(tile)
-	 
+	
+func build_wall():
+	print("Building wall...")
+	#get_tree().call_group("tiles", "freeze")  # TODO this is done as they're instantiated.
+	
+	# Put tiles face down
+	get_tree().call_group("tiles", "turn_face_down")
+	
+	# Get all the tiles in an array.
+	var tiles = get_tree().get_nodes_in_group("tiles")
+	
+	#randomize()  # Apparently you have to do this to generate a new seed each time :shrug:
+	tiles.shuffle()
+	
+	# The wall is a square with a length of 19 tiles and height of 2 tiles.
+	const wall_length = 19
+	#const wall_center = Vector2(1600/2, 900/2)
+	const wall_first_spot_lower = Vector2(300, 600)  # TODO pick something less arbitrary later
+	const wall_first_spot_upper = wall_first_spot_lower + Vector2(0, -20)
+	const tile_offset = Vector2(52, 0)
+	
+	for i in wall_length:
+		# Move each tile in the array to its spot on the wall.
+		# TODO make a wall building animation that is representative of real life
+		# TODO make tiles face down
+		var tile = tiles.pop_front()
+		tile.rest_point = wall_first_spot_lower + tile_offset * i
+		await get_tree().create_timer(0.1).timeout # waits for 1 second
+	
+	# Do it again, but slightly offset to show two levels
+	for i in wall_length:
+		var tile = tiles.pop_front()
+		tile.move_to_front()
+		tile.rest_point = wall_first_spot_upper + tile_offset * i
+		await get_tree().create_timer(0.1).timeout # waits for 1 second
+ 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	SignalBus.new_game.connect(_on_new_game)
@@ -42,3 +83,5 @@ func _on_new_game():
 	print("[mahjongg] Starting a new game...")
 	remove_child($TitleScreen)
 	spawn_tiles()
+	await get_tree().create_timer(1).timeout
+	build_wall()

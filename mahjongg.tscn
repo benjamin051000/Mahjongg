@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://c8vea6e7sskb5" path="res://hand.tscn" id="2_0raqi"]
 [ext_resource type="PackedScene" uid="uid://c0nbsm2vp3yub" path="res://titlescreen.tscn" id="4_bf3qt"]
 
-[node name="Mahjongg" type="Node"]
+[node name="Mahjongg" type="Node" groups=["tiles"]]
 script = ExtResource("1_a3hdb")
 
 [node name="Background" type="ColorRect" parent="."]
