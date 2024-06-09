@@ -29,6 +29,10 @@ window/size/viewport_height=900
 
 movie_writer/movie_file="/home/benjamin/src/mahjongg/movies/demo.avi"
 
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/Todo_Manager/plugin.cfg")
+
 [input]
 
 click={
