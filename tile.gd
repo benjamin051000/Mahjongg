@@ -1,11 +1,24 @@
 extends Sprite2D
 
+# TODO use this, maybe via a subclass of Tile for normal and honor tiles?
+#enum HonorValue {
+	## Winds
+	#E_WIND = 0,
+	#S_WIND,
+	#W_WIND,
+	#N_WIND,
+	## Dragons
+	#W_DRAG,
+	#G_DRAG,
+	#R_DRAG
+#}
+
 # Tile properties
-var suit: String
+var suit: Common.Suit
 var value: int
 var faceup: bool
 # The "orientation" of the tile (see perspective dicts)
-var perspective = "bottom"
+var perspective = "bottom"  # TODO can this be an enum?
 
 # Interaction and location parameters
 var selected = false
@@ -13,8 +26,6 @@ var in_hand = false
 var rest_point: Vector2  # This is provided by a hand.
 var frozen = false
 #var rest_nodes = []
-
-const suits = ["crak", "boo", "dot", "honor"] # TODO BUG TERRIBLE! THIS IS NOT SHARED WITH ONE IN mahjongg.gd!!!
 
 func set_perspective(persp: String):
 	perspective = persp
@@ -25,22 +36,20 @@ func turn_face_down():
 	const face_down_offset = 2
 	var perspective_offset = _get_perspective_offset()
 	frame_coords = Vector2(perspective_offset, face_down_offset)
-
-
-func _get_suit_offset() -> int:
-	return suits.find(suit)
-
+	
 
 func turn_face_up():
+	# if suit == Common.Suit.HONOR:
+	# 	pass
+	
 	faceup = true
 	# The face up tiles start at row index 3.
 	const face_up_initial_offset = 3
 	# Additional offset based off the perspective (which side of the tile can you see?)
 	var perspective_offset = _get_perspective_offset()
 	# Additional offset (from crak (crak == O regradless of perspective)) for the suit (see suit enum for indices)
-	var suit_offset = _get_suit_offset()
 	
-	var y = face_up_initial_offset + perspective_offset + suit_offset
+	var y = face_up_initial_offset + perspective_offset + suit  # TODO check that suit casts implicitly to int
 	frame_coords = Vector2(value - 1, y)  # Convert value to index
 	
 
@@ -62,7 +71,6 @@ func _validate_fields():
 	# TODO use setters for this instead for extra validation!
 	# Value is not an index. We convert it to one when appropriate internally.
 	assert(value >= 1 and value <= 9)
-	assert(suit in suits)
 	assert(Vector2.ZERO <= rest_point and rest_point <= Vector2(1600,900))
 	#assert(perspective in ["bottom", "top", "left", "right"])
 
@@ -87,6 +95,13 @@ func _on_control_gui_input(_event):
 		selected = true
 		move_to_front()
 		turn_face_up()
+		print("--------------------------")
+		print("suit: ", Common.Suit.keys()[suit])
+		print("value: ", value)
+		print("faceup? ", faceup)
+		print("perspective: ", perspective)
+		print("frame_coords: ", frame_coords)
+		print("--------------------------")
 
 
 func _physics_process(delta):
