@@ -2,7 +2,7 @@ extends Node2D
 
 # Straight from mahjongg.gd
 func spawn_tiles():
-	var tile_scene = preload("res://tile.tscn")
+	const tile_scene = preload("res://tile.tscn")
 	const suits = ["crak", "boo", "dot", "honor"]  # TODO BUG TERRIBLE! THIS IS NOT SHARED WITH ONE IN mahjongg.gd!!!
 	for suit in suits.slice(0, 3):
 		var tile = tile_scene.instantiate()
