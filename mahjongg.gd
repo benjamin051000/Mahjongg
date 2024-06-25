@@ -6,11 +6,11 @@ func spawn_tiles():
 	# Start with the three numerical suits.
 	for suit in [suits.CRAK, suits.BOO, suits.DOT]:
 		for value in range(1, 10):
-			for i in 1: #4: # Four of each tile TODO bring it back
+			for i in 4: # Four of each tile
 				var tile = tile_scene.instantiate()
 				tile.suit = suit
 				tile.value = value
-				tile.position = Vector2(300 + 50 * (value + i), 200 + 100 * suit)
+				tile.position = Vector2(300 + 50 * value, 200 + 100 * suit)
 				#tile.position = Vector2(randi_range(100, 1500), randi_range(100, 700))
 				tile.rest_point = tile.position
 				#tile.frozen = true
@@ -20,7 +20,7 @@ func spawn_tiles():
 	# Winds and Dragons
 	# TODO these don't really have a "value", but it's convenient to match the normal tiles for now
 	for value in range(1, 8):
-		for i in 1:
+		for i in 4:
 			var tile = tile_scene.instantiate()
 			tile.suit = Common.Suit.HONOR
 			tile.value = value
@@ -75,7 +75,7 @@ func build_horizontal_wall(wall_length: int, tiles: Array, x: int, bottom_tile_y
 func build_wall():
 	const wall_length = 19
 	
-	#get_tree().call_group("tiles", "turn_face_down")	
+	#get_tree().call_group("tiles", "turn_face_down")  # TODO add this back in
 	var tiles = get_tree().get_nodes_in_group("tiles")
 	
 	tiles.shuffle()
@@ -96,4 +96,4 @@ func _on_new_game():
 	print("[mahjongg] Starting a new game...")
 	remove_child($TitleScreen)
 	spawn_tiles()
-	#build_wall()
+	build_wall()
