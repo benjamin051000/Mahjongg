@@ -110,16 +110,25 @@ func create_hands():
 	var your_hand = hand_scene.instantiate()
 	your_hand.position = Vector2i(800, 855)
 	add_child(your_hand)
-	
+
+func spawn_dice():
+	const dice_scene = preload("res://dice.tscn")
+	var dice: Array = [dice_scene.instantiate(), dice_scene.instantiate()]
+		
+	for i in 2:
+		dice[i].position = Vector2i(800 + 30*i, 450)
+		add_child(dice[i])
+
+###########################################################
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	SignalBus.new_game.connect(_on_new_game)
 	spawn_tiles()
 	#main_menu_animation()
-	
 
 func _on_new_game():
 	print("[mahjongg] Starting a new game...")
 	remove_child($TitleScreen)
 	create_hands()
 	build_wall()
+	spawn_dice()
