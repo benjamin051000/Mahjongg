@@ -10,8 +10,8 @@ func spawn_tiles():
 				var tile = tile_scene.instantiate()
 				tile.suit = suit
 				tile.value = value
-				tile.position = Vector2(300 + 50 * value, 200 + 100 * suit)
-				#tile.position = Vector2(randi_range(100, 1500), randi_range(100, 700))
+				#tile.position = Vector2(300 + 50 * value, 200 + 100 * suit)
+				tile.position = Vector2i(randi_range(100, 1500), randi_range(100, 800))
 				tile.rest_point = tile.position
 				tile.frozen = false
 				tile.faceup = true
@@ -25,8 +25,8 @@ func spawn_tiles():
 			var tile = tile_scene.instantiate()
 			tile.suit = Common.Suit.HONOR
 			tile.value = value
-			tile.position = Vector2(300 + 50 * (value + i), 200 + 100 * tile.suit)
-			#tile.position = Vector2(randi_range(100, 1500), randi_range(100, 700))
+			#tile.position = Vector2(300 + 50 * (value + i), 200 + 100 * tile.suit)
+			tile.position = Vector2i(randi_range(100, 1500), randi_range(100, 800))
 			tile.rest_point = tile.position
 			tile.frozen = false
 			tile.faceup = true
@@ -39,8 +39,8 @@ func spawn_tiles():
 		# TODO we don't have textures for these yet, so just use the ? tile for now I guess
 		tile.suit = Common.Suit.HONOR
 		tile.value = 9  # NOTE: Recall that values are 1-9, indexing happens internally.
-		tile.position = Vector2(300 + 50 * (i + 1), 200 + 100 * (tile.suit + 1))
-		#tile.position = Vector2(randi_range(100, 1500), randi_range(100, 700))
+		#tile.position = Vector2(300 + 50 * (i + 1), 200 + 100 * (tile.suit + 1))
+		tile.position = Vector2i(randi_range(100, 1500), randi_range(100, 800))
 		tile.rest_point = tile.position
 		tile.frozen = false
 		tile.faceup = true
@@ -105,17 +105,21 @@ func build_wall():
 	build_vertical_wall(Common.wall_length, tiles,   1600-325+17*3, 50, -20, Vector2i(0, 52-12)) # right
 	# TODO tiles is not consumed... I wonder how it's being passed into these funcs.
 
-
+func create_hands():
+	const hand_scene = preload("res://hand.tscn")
+	var your_hand = hand_scene.instantiate()
+	your_hand.position = Vector2i(800, 855)
+	add_child(your_hand)
+	
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	SignalBus.new_game.connect(_on_new_game)
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-	#pass
+	spawn_tiles()
+	#main_menu_animation()
+	
 
 func _on_new_game():
 	print("[mahjongg] Starting a new game...")
 	remove_child($TitleScreen)
-	spawn_tiles()
+	create_hands()
 	build_wall()
