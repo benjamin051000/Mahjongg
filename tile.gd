@@ -13,45 +13,56 @@ extends Sprite2D
 	#R_DRAG
 #}
 
-# Tile properties
-var suit: Common.Suit
-var value: int
-var faceup: bool: set = set_faceup
-# The "orientation" of the tile (see perspective dicts)
-var perspective: Common.TilePerspective: set = set_perspective # TODO can this be an enum?
+########################################
+# Tile properties that visually affect the sprite
+var suit: Common.Suit:
+	set(new):
+		suit = new
+		_update_sprite()
 
-# Interaction and location parameters
+var value: int:
+	set(new):
+		assert(new >= 1 and new <= 9)
+		value = new
+		_update_sprite()
+
+var faceup: bool:
+	set(new):
+		faceup = new
+		_update_sprite()
+
+# The "orientation" of the tile (see perspective dicts)
+var perspective: Common.TilePerspective: 
+	set(new):
+		perspective = new
+		_update_sprite()
+########################################
+
+# Interaction and location parameters (do not affect the sprite visually)
 var selected = false
 var in_hand = false
-var rest_point: Vector2  # This is provided by a hand.
-var frozen = false
-#var rest_nodes = []
 
-func set_perspective(new_persp: Common.TilePerspective):
-	perspective = new_persp
+var rest_point: Vector2:  # Where the tile returns when `selected == false`
+	set(new):
+		assert(Vector2.ZERO <= new and new <= Vector2(1600,900))  # TODO fetch screen size dynamically
+		rest_point = new
+		# _physics_process will handle usage of this, no need to call anything.
+		
+var frozen: bool  # Disables click and drag
+
+func _update_sprite():
 	if faceup:
-		turn_face_up()
+		_turn_face_up()
 	else:
-		turn_face_down()
+		_turn_face_down()
 
-func set_faceup(new_faceup):
-	faceup = new_faceup
-	if faceup:
-		turn_face_up()
-	else:
-		turn_face_down()
-
-
-func turn_face_down():
+func _turn_face_down():
 	const face_down_offset = 2
 	var perspective_offset = _get_perspective_offset()
 	frame_coords = Vector2(perspective_offset, face_down_offset)
 
 
-func turn_face_up():
-	# if suit == Common.Suit.HONOR:
-	# 	pass
-	
+func _turn_face_up():
 	# The face up tiles start at row index 3.
 	const face_up_initial_offset = 3
 	# Additional offset based off the perspective (which side of the tile can you see?)
@@ -86,25 +97,12 @@ func _get_perspective_offset() -> int:
 		}
 		return sprite_perspective_offsets_facedown[perspective]
 
-
-func _validate_fields():
-	# TODO use setters for this instead for extra validation!
-	# Value is not an index. We convert it to one when appropriate internally.
-	assert(value >= 1 and value <= 9)
-	assert(Vector2.ZERO <= rest_point and rest_point <= Vector2(1600,900))
-	#assert(perspective in ["bottom", "top", "left", "right"])
-
-
 # Called when the node enters the scene tree for the first time.
-func _ready():
-	_validate_fields()
-	
+func _ready():	
 	SignalBus.tile_added_to_hand.connect(_on_hand_collect_tile_into_hand)
 	SignalBus.tile_removed_from_hand.connect(_on_hand_remove_tile_from_hand)
 	SignalBus.hand_reorder_tiles.connect(_on_hand_reorder_tiles)
 	
-	turn_face_up()
-		
 #	rest_nodes = get_tree().get_nodes_in_group("zone")
 #	rest_point = rest_nodes[0].global_position  # Default resting position (may not be necessary)
 #	rest_nodes[0].select()  # Update color indicators
@@ -114,7 +112,7 @@ func _on_control_gui_input(_event):
 	if Input.is_action_just_pressed("click") and not frozen:  # TODO does one of the nodes already have a frozen flag?
 		selected = true
 		move_to_front()
-		turn_face_up()
+		faceup = true
 		print("--------------------------")
 		print("suit: ", Common.Suit.keys()[suit])
 		print("value: ", value)

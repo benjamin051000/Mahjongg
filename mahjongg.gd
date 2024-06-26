@@ -2,7 +2,7 @@ extends Node
 
 func spawn_tiles():
 	const tile_scene = preload("res://tile.tscn")
-	const suits = Common.Suit  # TODO what type is this? Appears to work... Interesting.
+	const suits = Common.Suit
 	# Start with the three numerical suits.
 	for suit in [suits.CRAK, suits.BOO, suits.DOT]:
 		for value in range(1, 10):
@@ -13,7 +13,8 @@ func spawn_tiles():
 				tile.position = Vector2(300 + 50 * value, 200 + 100 * suit)
 				#tile.position = Vector2(randi_range(100, 1500), randi_range(100, 700))
 				tile.rest_point = tile.position
-				#tile.frozen = true
+				tile.frozen = false
+				tile.faceup = true
 				tile.add_to_group("tiles")
 				add_child(tile)
 	
@@ -27,7 +28,8 @@ func spawn_tiles():
 			tile.position = Vector2(300 + 50 * (value + i), 200 + 100 * tile.suit)
 			#tile.position = Vector2(randi_range(100, 1500), randi_range(100, 700))
 			tile.rest_point = tile.position
-			tile.frozen = true
+			tile.frozen = false
+			tile.faceup = true
 			tile.add_to_group("tiles")
 			add_child(tile)
 	
@@ -40,7 +42,8 @@ func spawn_tiles():
 		tile.position = Vector2(300 + 50 * (i + 1), 200 + 100 * (tile.suit + 1))
 		#tile.position = Vector2(randi_range(100, 1500), randi_range(100, 700))
 		tile.rest_point = tile.position
-		tile.frozen = true
+		tile.frozen = false
+		tile.faceup = true
 		tile.add_to_group("tiles")
 		add_child(tile)
 
@@ -64,8 +67,7 @@ func build_horizontal_wall(
 			if level_offset:
 				tile.move_to_front()
 			
-			tile.frozen = false
-			#tile.change_perspective("bottom")  # TODO is this required?
+			#tile.frozen = false
 			await get_tree().create_timer(0.1).timeout
 	
 func build_vertical_wall(
@@ -84,13 +86,8 @@ func build_vertical_wall(
 			# HACK: These get built top-to-bottom, so *every* time a new one gets placed,
 			# it's supposed to be in the front (from our perspective).
 			tile.move_to_front()
-			
 			tile.frozen = false
-			 
-			# TODO make this nicer to deal with
-			tile.set_perspective(Common.TilePerspective.LEFT)
-			#tile.turn_face_up()
-			tile.turn_face_down()
+			tile.perspective = Common.TilePerspective.LEFT
 			
 			await get_tree().create_timer(0.1).timeout
 
@@ -98,12 +95,13 @@ func build_vertical_wall(
 func build_wall():
 	const wall_length = 19
 	
-	get_tree().call_group("tiles", "turn_face_down")  # TODO add this back in
+	#get_tree().call_group("tiles", "turn_face_down")  # TODO add this back in
 	var tiles = get_tree().get_nodes_in_group("tiles")
 	
 	tiles.shuffle()
 	
 	# Right now we're hard-coded to 1600x900, so assume those values when making adjustments.
+	# TODO this will certainly bite me in the ass later. Oh well :shrug:
 	build_horizontal_wall(wall_length, tiles, 325,      900-140, -20, Vector2i(52, 0)) # lower
 	build_horizontal_wall(wall_length, tiles, 325,      60, -20, Vector2i(52, 0)) # upper
 	build_vertical_wall(wall_length, tiles,   325-21*3,      50, -20, Vector2i(0, 52-12)) # left
