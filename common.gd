@@ -15,3 +15,6 @@ enum TilePerspective {
 	TOP,
 	LEFT,
 }
+
+# Number of tiles in a wall.
+const wall_length = 19

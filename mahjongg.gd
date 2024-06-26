@@ -93,20 +93,17 @@ func build_vertical_wall(
 
 
 func build_wall():
-	const wall_length = 19
-	
-	#get_tree().call_group("tiles", "turn_face_down")  # TODO add this back in
+	#get_tree().call_group("tiles", "set_faceup", false)
 	var tiles = get_tree().get_nodes_in_group("tiles")
-	
 	tiles.shuffle()
 	
 	# Right now we're hard-coded to 1600x900, so assume those values when making adjustments.
 	# TODO this will certainly bite me in the ass later. Oh well :shrug:
-	build_horizontal_wall(wall_length, tiles, 325,      900-140, -20, Vector2i(52, 0)) # lower
-	build_horizontal_wall(wall_length, tiles, 325,      60, -20, Vector2i(52, 0)) # upper
-	build_vertical_wall(wall_length, tiles,   325-21*3,      50, -20, Vector2i(0, 52-12)) # left
-	build_vertical_wall(wall_length, tiles,   1600-325+17*3, 50, -20, Vector2i(0, 52-12)) # right
-	# TODO is tiles consumed at this point? I believe it is.
+	build_horizontal_wall(Common.wall_length, tiles, 325,      900-140, -20, Vector2i(52, 0)) # lower
+	build_horizontal_wall(Common.wall_length, tiles, 325,      60, -20, Vector2i(52, 0)) # upper
+	build_vertical_wall(Common.wall_length, tiles,   325-21*3,      50, -20, Vector2i(0, 52-12)) # left
+	build_vertical_wall(Common.wall_length, tiles,   1600-325+17*3, 50, -20, Vector2i(0, 52-12)) # right
+	# TODO tiles is not consumed... I wonder how it's being passed into these funcs.
 
 
 # Called when the node enters the scene tree for the first time.

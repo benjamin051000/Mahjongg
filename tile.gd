@@ -26,10 +26,11 @@ var value: int:
 		value = new
 		_update_sprite()
 
-var faceup: bool:
-	set(new):
-		faceup = new
-		_update_sprite()
+var faceup: bool: set = set_faceup
+# This is a named func because it's used by `call_group("tiles", "set_faceup", false)` in mahjongg.gd.
+func set_faceup(new: bool):
+	faceup = new
+	_update_sprite()
 
 # The "orientation" of the tile (see perspective dicts)
 var perspective: Common.TilePerspective: 
