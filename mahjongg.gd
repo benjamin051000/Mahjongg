@@ -45,43 +45,70 @@ func spawn_tiles():
 		add_child(tile)
 
 func build_horizontal_wall(
-	wall_length: int, 
-	tiles: Array, 
-	x: int, 
-	bottom_tile_y: int, 
-	second_level_offset: int, 
-	x_y_offset: Vector2
+	wall_length: int, # Number of tiles in a wall
+	tiles: Array, # Array referencing Tile nodes
+	x: int, # Starting x-coord of wall (NOTE which appears to be the center of the tile)
+	bottom_tile_y: int, # Y-coord of the bottom row
+	second_level_offset: int, # y-offset of top level
+	x_y_offset: Vector2i  # Size of tile, used as offset. TODO can we implicitly get this from the Tile size?
 ):
-	# WARNING: This consumes the tiles array! Send a copy to it. TODO just reference it.
+	# WARNING: This consumes the tiles array! TODO send a copy, or just reference it.
 	# Two levels tall. First one has no offset because it's the "origin".
-	for level_offset in [Vector2.ZERO, Vector2(0, second_level_offset)]:
+	for level_offset in [Vector2i.ZERO, Vector2i(0, second_level_offset)]:
 		for i in wall_length:
 			# Move each tile in the array to its spot on the wall.
-			# TODO make a wall building animation that is representative of real life
-			# TODO make tiles face down
 			var tile = tiles.pop_front()
-			tile.rest_point = Vector2(x, bottom_tile_y) + x_y_offset * i + level_offset
+			tile.rest_point = Vector2i(x, bottom_tile_y) + x_y_offset*i + level_offset
 			
+			# Ensure the top level appears on top of the bottom level.
 			if level_offset:
 				tile.move_to_front()
 			
-			tile.frozen = true
-			#tile.change_perspective("bottom")
-			await get_tree().create_timer(0.1).timeout # waits for 1 second
+			tile.frozen = false
+			#tile.change_perspective("bottom")  # TODO is this required?
+			await get_tree().create_timer(0.1).timeout
 	
+func build_vertical_wall(
+	wall_length: int,
+	tiles: Array,
+	x: int,  # x-coord of wall
+	y: int,  # Starting y-coord of wall
+	second_level_offset: int, 
+	x_y_offset: Vector2i
+):
+	for level_offset in [Vector2i.ZERO, Vector2i(0, second_level_offset)]:
+		for i in wall_length:
+			var tile = tiles.pop_front()
+			tile.rest_point = Vector2i(x, y) + x_y_offset*i + level_offset
+			
+			# HACK: These get built top-to-bottom, so *every* time a new one gets placed,
+			# it's supposed to be in the front (from our perspective).
+			tile.move_to_front()
+			
+			tile.frozen = false
+			 
+			# TODO make this nicer to deal with
+			tile.set_perspective("left")
+			#tile.turn_face_up()
+			tile.turn_face_down()
+			
+			await get_tree().create_timer(0.1).timeout
+
+
 func build_wall():
 	const wall_length = 19
 	
-	#get_tree().call_group("tiles", "turn_face_down")  # TODO add this back in
+	get_tree().call_group("tiles", "turn_face_down")  # TODO add this back in
 	var tiles = get_tree().get_nodes_in_group("tiles")
 	
 	tiles.shuffle()
 	
-	# Right now we're hard-coded to 1600x900.
-	const x_offset_from_bottom = null
-	build_horizontal_wall(wall_length, tiles, 300, 750, -20, Vector2(52, 0))
-	build_horizontal_wall(wall_length, tiles, 300, 150, -20, Vector2(52, 0))
-	# TODO is tiles consumed at this point?
+	# Right now we're hard-coded to 1600x900, so assume those values when making adjustments.
+	build_horizontal_wall(wall_length, tiles, 325,      900-140, -20, Vector2i(52, 0)) # lower
+	build_horizontal_wall(wall_length, tiles, 325,      60, -20, Vector2i(52, 0)) # upper
+	build_vertical_wall(wall_length, tiles,   325-21*3,      50, -20, Vector2i(0, 52-12)) # left
+	build_vertical_wall(wall_length, tiles,   1600-325+17*3, 50, -20, Vector2i(0, 52-12)) # right
+	# TODO is tiles consumed at this point? I believe it is.
 
 
 # Called when the node enters the scene tree for the first time.
