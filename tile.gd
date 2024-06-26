@@ -16,9 +16,9 @@ extends Sprite2D
 # Tile properties
 var suit: Common.Suit
 var value: int
-var faceup: bool
+var faceup: bool: set = set_faceup
 # The "orientation" of the tile (see perspective dicts)
-var perspective = "bottom"  # TODO can this be an enum?
+var perspective: Common.TilePerspective: set = set_perspective # TODO can this be an enum?
 
 # Interaction and location parameters
 var selected = false
@@ -27,22 +27,31 @@ var rest_point: Vector2  # This is provided by a hand.
 var frozen = false
 #var rest_nodes = []
 
-func set_perspective(persp: String):
-	perspective = persp
+func set_perspective(new_persp: Common.TilePerspective):
+	perspective = new_persp
+	if faceup:
+		turn_face_up()
+	else:
+		turn_face_down()
+
+func set_faceup(new_faceup):
+	faceup = new_faceup
+	if faceup:
+		turn_face_up()
+	else:
+		turn_face_down()
+
 
 func turn_face_down():
-	# TODO add to setter
-	faceup = false
 	const face_down_offset = 2
 	var perspective_offset = _get_perspective_offset()
 	frame_coords = Vector2(perspective_offset, face_down_offset)
-	
+
 
 func turn_face_up():
 	# if suit == Common.Suit.HONOR:
 	# 	pass
 	
-	faceup = true
 	# The face up tiles start at row index 3.
 	const face_up_initial_offset = 3
 	# Additional offset based off the perspective (which side of the tile can you see?)
@@ -56,14 +65,25 @@ func turn_face_up():
 func _get_perspective_offset() -> int:
 	# Returns the offset, in rows (x vals) from the very first face up tile
 	# that matches the given tile set. OR, if face-down, returns the row
+	const tp = Common.TilePerspective
 	if faceup:
 		# These are rows in the spritesheet, which are "y" values.
 		# These are the crak rows
-		const sprite_perspective_offsets_faceup = {"bottom": 5, "top": 0, "left": 10, "right": 10}
+		var sprite_perspective_offsets_faceup = {
+			tp.BOTTOM: 5,
+			tp.TOP: 0,
+			tp.LEFT: 10,
+			tp.RIGHT: 10
+		}
 		return sprite_perspective_offsets_faceup[perspective] 
 	else:
 		# All the face down sprites are in a single row, so these are x values
-		const sprite_perspective_offsets_facedown = {"bottom": 0, "top": 2, "left": 6, "right": 6}
+		var sprite_perspective_offsets_facedown = {
+			tp.BOTTOM: 0,
+			tp.TOP: 2,
+			tp.LEFT: 6,
+			tp.RIGHT: 6
+		}
 		return sprite_perspective_offsets_facedown[perspective]
 
 

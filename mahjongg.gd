@@ -88,7 +88,7 @@ func build_vertical_wall(
 			tile.frozen = false
 			 
 			# TODO make this nicer to deal with
-			tile.set_perspective("left")
+			tile.set_perspective(Common.TilePerspective.LEFT)
 			#tile.turn_face_up()
 			tile.turn_face_down()
 			

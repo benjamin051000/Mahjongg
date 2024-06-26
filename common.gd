@@ -8,3 +8,10 @@ enum Suit {
 	DOT,
 	HONOR
 }
+
+enum TilePerspective {
+	BOTTOM, # First because it's most common, but I doubt it makes any real difference
+	RIGHT,
+	TOP,
+	LEFT,
+}
