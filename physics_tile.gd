@@ -1,43 +1,44 @@
 extends RigidBody2D
+class_name PhysicsTile
 
-var selected = false
-#var rest_point
-#var rest_nodes = []
+signal picked_up
+signal dropped
 
-# Called when the node enters the scene tree for the first time.
-#func _ready():
-#	rest_nodes = get_tree().get_nodes_in_group("zone")
-#	rest_point = rest_nodes[0].global_position  # Default resting position (may not be necessary)
-#	rest_nodes[0].select()  # Update color indicators
+var held := false
 
-func _on_control_gui_input(_event):
-	if Input.is_action_just_pressed("click"):
-		selected = true
-		
-#		move_to_front()
+func _on_input_event(viewport: Node, event: InputEvent, shape_idx: int) -> void:
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
+		if event.pressed:
+			print("clicked")
+			_pickup()
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _physics_process(delta):
-	if selected:
-		global_position = lerp(global_position, get_global_mouse_position(), 25 * delta)
-		rotation = lerp_angle(rotation, 0, 10 * delta)
-		freeze = true
-#		look_at(get_global_mouse_position())
-#	else:
-#		global_position = lerp(global_position, rest_point, 10 * delta)
-#		rotation = lerp_angle(rotation, 0, 10 * delta)
+func _physics_process(delta: float) -> void:
+	if held:
+		#global_transform.origin = lerp(global_transform.origin, get_global_mouse_position(), 25 * delta)
+		global_position = lerp(global_position, get_global_mouse_position(		), 25 * delta)
+		#position = lerp(position, get_global_mouse_position(), 25 * delta)
 
-func _input(event):
-	if event is InputEventMouseButton:
-		if event.button_index == MOUSE_BUTTON_LEFT and not event.pressed:
-			selected = false
-			freeze = false
-#			var shortest_dist = 75
-#			for child in rest_nodes:
-#				var distance = global_position.distance_to(child.global_position)
-#				if distance < shortest_dist:
-#					child.select()
-#					rest_point = child.global_position
-#					shortest_dist = distance
+func _pickup():
+	#if held:
+		#return # TODO necessary?
+	freeze = true
+	held = true
+	picked_up.emit(self)
 
+func _drop(impulse=Vector2.ZERO):
+	#if not held:
+		#return
+	freeze = false
+	apply_central_impulse(impulse)
+	held = false
+	dropped.emit(self)
 
+func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
+		if held and not event.pressed:
+			var impulse = Input.get_last_mouse_velocity()
+			print("impulse:", impulse)
+			const limit = 300
+			impulse = impulse.clamp(Vector2(-limit, -limit), Vector2(limit, limit))
+			
+			_drop(impulse)

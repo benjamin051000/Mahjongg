@@ -7,6 +7,9 @@
 size = Vector2(18, 26)
 
 [node name="PhysicsTile" type="RigidBody2D"]
+input_pickable = true
+gravity_scale = 0.0
+freeze_mode = 1
 script = ExtResource("1_4m488")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
@@ -20,13 +23,4 @@ hframes = 9
 vframes = 24
 frame = 45
 
-[node name="Control" type="Control" parent="."]
-layout_mode = 3
-anchors_preset = 0
-offset_left = -27.0
-offset_top = -39.0
-offset_right = -9.0
-offset_bottom = -13.0
-scale = Vector2(3, 3)
-
-[connection signal="gui_input" from="Control" to="." method="_on_control_gui_input"]
+[connection signal="input_event" from="." to="." method="_on_input_event"]
