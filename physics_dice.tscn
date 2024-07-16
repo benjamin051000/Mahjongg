@@ -11,6 +11,7 @@ position = Vector2(764, 379)
 input_pickable = true
 gravity_scale = 0.0
 script = ExtResource("1_x58fy")
+render_shadow = false
 
 [node name="Shadow" type="ColorRect" parent="."]
 offset_left = -15.0

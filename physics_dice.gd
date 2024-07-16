@@ -6,8 +6,10 @@ var selected := false
 var old_mouse := Vector2.ZERO
 var new_mouse := Vector2.ZERO
 var speed := Vector2.ZERO
-@export var friction := 0.97
+@export var friction := 0.95
 @export var max_speed := Vector2(2000, 2000)
+
+@export var render_shadow := true
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -30,9 +32,12 @@ func _physics_process(delta: float) -> void:
 		global_position = lerp(global_position, get_global_mouse_position(), 25 * delta)
 		$CollisionShape2D.scale = lerp($CollisionShape2D.scale, Vector2(5, 5), 10 * delta)
 		$Sprite2D.scale = lerp($Sprite2D.scale, Vector2(5, 5), 10 * delta)
-		$Shadow.scale = lerp($Shadow.scale, Vector2(5, 5), 10 * delta)
-		$Shadow.color.a = lerp($Shadow.color.a, 128.0, 10 * delta)
+		if render_shadow:
+			$Shadow.scale = lerp($Shadow.scale, Vector2(5, 5), 10 * delta)
+			$Shadow.color.a = lerp($Shadow.color.a, 128.0, 10 * delta)
+		
 		#scale = Vector2(5, 5)
+		
 	else:
 		# Naturally come down to 0
 		global_position += speed * delta
@@ -41,8 +46,10 @@ func _physics_process(delta: float) -> void:
 		# TODO emulate "shadow"
 		$CollisionShape2D.scale = lerp($CollisionShape2D.scale, Vector2(3, 3), 10 * delta)
 		$Sprite2D.scale = lerp($Sprite2D.scale, Vector2(3, 3), 10 * delta)
-		$Shadow.scale = lerp($Shadow.scale, Vector2(3, 3), 10 * delta)
-		$Shadow.color.a = lerp($Shadow.color.a, 0.0, 10 * delta)
+		if render_shadow:
+			$Shadow.scale = lerp($Shadow.scale, Vector2(3, 3), 10 * delta)
+			$Shadow.color.a = lerp($Shadow.color.a, 0.0, 10 * delta)
+		
 		#$Sprite2D.scale = Vector2(1, 1)
 		#speed = clamp(speed, Vector2.ZERO, max_speed)
 		# update mouse speed

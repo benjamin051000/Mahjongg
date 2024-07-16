@@ -116,8 +116,11 @@ func spawn_dice():
 	var dice: Array = [dice_scene.instantiate(), dice_scene.instantiate()]
 		
 	for i in 2:
+		dice[i].add_to_group("dice")
 		dice[i].position = Vector2i(800 + 30*i, 450)
 		add_child(dice[i])
+	
+	print("Click either dice to roll them.")
 
 ###########################################################
 # Called when the node enters the scene tree for the first time.

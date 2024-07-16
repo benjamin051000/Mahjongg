@@ -21,7 +21,7 @@ offset_top = -13.0
 offset_right = 9.0
 offset_bottom = 13.0
 
-[node name="Area2D" type="Area2D" parent="."]
+[node name="Area2D" type="Area2D" parent="." groups=["dice"]]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
 visible = false
