@@ -1,4 +1,5 @@
-extends Sprite2D
+extends Draggable2D
+class_name Tile
 
 # TODO use this, maybe via a subclass of Tile for normal and honor tiles?
 #enum HonorValue {
@@ -27,7 +28,8 @@ var value: int:
 		_update_sprite()
 
 var faceup: bool: set = set_faceup
-# This is a named func because it's used by `call_group("tiles", "set_faceup", false)` in mahjongg.gd.
+# This is a function (rather than a setter) because it's used by 
+# `call_group("tiles", "set_faceup", false)` in mahjongg.gd.
 func set_faceup(new: bool):
 	faceup = new
 	_update_sprite()
@@ -40,15 +42,15 @@ var perspective: Common.TilePerspective:
 ########################################
 
 # Interaction and location parameters (do not affect the sprite visually)
-var selected = false
-var in_hand = false
+var selected := false
+var in_hand := false
 
 var rest_point: Vector2:  # Where the tile returns when `selected == false`
 	set(new):
-		assert(Vector2.ZERO <= new and new <= Vector2(1600,900))  # TODO fetch screen size dynamically
+		assert(Vector2.ZERO <= new and new <= get_viewport().size)
 		rest_point = new
 		# _physics_process will handle usage of this, no need to call anything.
-		
+
 var frozen: bool  # Disables click and drag
 
 func _update_sprite():

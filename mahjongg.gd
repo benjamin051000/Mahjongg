@@ -1,7 +1,7 @@
 extends Node
 
 func spawn_tiles():
-	const tile_scene = preload("res://tile.tscn")
+	const tile_scene = preload("res://physics_tile.tscn")
 	const suits = Common.Suit
 	# Start with the three numerical suits.
 	for suit in [suits.CRAK, suits.BOO, suits.DOT]:

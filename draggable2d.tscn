@@ -1,0 +1,20 @@
+[gd_scene load_steps=2 format=3 uid="uid://dac60cfdcub7a"]
+
+[ext_resource type="Script" path="res://draggable.gd" id="1_m7wo8"]
+
+[node name="Draggable2D" type="RigidBody2D"]
+input_pickable = true
+gravity_scale = 0.0
+freeze_mode = 1
+script = ExtResource("1_m7wo8")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+scale = Vector2(3, 3)
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(3, 3)
+hframes = 9
+vframes = 24
+frame = 45
+
+[connection signal="input_event" from="." to="." method="_on_input_event"]

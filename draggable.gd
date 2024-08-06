@@ -1,6 +1,11 @@
 extends RigidBody2D
-class_name PhysicsTile
+class_name Draggable2D
 
+# Impulse cap, used when releasing the object.
+# I think it's pixels/sec.
+@export var impulse_limit_pps := 300
+
+# Use these signals if you want to hook into pickup/drop events.
 signal picked_up
 signal dropped
 
@@ -9,7 +14,6 @@ var held := false
 func _on_input_event(viewport: Node, event: InputEvent, shape_idx: int) -> void:
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		if event.pressed:
-			print("clicked")
 			_pickup()
 
 func _physics_process(delta: float) -> void:
@@ -37,8 +41,9 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		if held and not event.pressed:
 			var impulse = Input.get_last_mouse_velocity()
-			print("impulse:", impulse)
-			const limit = 300
-			impulse = impulse.clamp(Vector2(-limit, -limit), Vector2(limit, limit))
+			impulse = impulse.clamp(
+				Vector2(-impulse_limit_pps, -impulse_limit_pps), 
+				Vector2(impulse_limit_pps, impulse_limit_pps)
+			)
 			
 			_drop(impulse)
