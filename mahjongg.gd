@@ -68,7 +68,7 @@ func build_horizontal_wall(
 				tile.move_to_front()
 			
 			#tile.frozen = false
-			await get_tree().create_timer(0.1).timeout
+			await get_tree().create_timer(0.05).timeout
 	
 func build_vertical_wall(
 	wall_length: int,
@@ -89,7 +89,7 @@ func build_vertical_wall(
 			tile.frozen = false
 			tile.perspective = Common.TilePerspective.LEFT
 			
-			await get_tree().create_timer(0.1).timeout
+			await get_tree().create_timer(0.05).timeout
 
 
 func build_wall():
@@ -137,8 +137,7 @@ func spawn_dice() -> int:
 	await roll_dice_btn.pressed
 	# This allows for the proper distribution of two 1d6 dice.
 	var dice_roll = randi_range(1, 6) + randi_range(1, 6)
-	print("You rolled: ", dice_roll)
-	
+	roll_dice_btn.text = "Rolled: " + str(dice_roll)
 	return dice_roll
 	
 
@@ -156,7 +155,7 @@ func _on_new_game():
 	var tiles_wall_order = await build_wall()
 	# TODO this is just a bandaid solution... build_wall should probably be 
 	# awaitable and have some sort of signal that pops when it's done building.
-	await get_tree().create_timer(5).timeout
+	await get_tree().create_timer(3).timeout
 	create_hands()
 	var first_col_offset = await spawn_dice()
 	deal(tiles_wall_order, first_col_offset)
