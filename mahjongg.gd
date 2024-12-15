@@ -135,7 +135,8 @@ func spawn_dice() -> int:
 	roll_dice_btn.position = Vector2i(500, 400)
 	add_child(roll_dice_btn)
 	await roll_dice_btn.pressed
-	var dice_roll = randi_range(0, 12)
+	# This allows for the proper distribution of two 1d6 dice.
+	var dice_roll = randi_range(1, 6) + randi_range(1, 6)
 	print("You rolled: ", dice_roll)
 	
 	return dice_roll
