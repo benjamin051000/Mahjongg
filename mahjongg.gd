@@ -1,5 +1,7 @@
 extends Node
 
+const DEBUG_WALL := true
+
 func spawn_tiles():
 	const tile_scene = preload("res://tile.tscn")
 	const suits = Common.Suit
@@ -71,7 +73,8 @@ func build_horizontal_wall(
 			tiles_in_this_wall.append(tile)
 
 			tile.rest_point = Vector2i(x, bottom_tile_y) + x_y_offset*i + level_offset
-			
+			if level_offset and DEBUG_WALL:
+				tile.rest_point += Vector2(0, -15)
 			# Ensure the top level appears on top of the bottom level.
 			if level_offset:
 				tile.move_to_front()
@@ -106,6 +109,9 @@ func build_vertical_wall(
 			tiles_in_this_wall.append(tile)
 			
 			tile.rest_point = Vector2i(x, y) + x_y_offset*i + level_offset
+			
+			if level_offset and DEBUG_WALL:
+				tile.rest_point += Vector2(-15 if left_not_right else 15, 0)
 			
 			# HACK: These get built top-to-bottom, so *every* time a new one gets placed,
 			# it's supposed to be in the front (from our perspective).
