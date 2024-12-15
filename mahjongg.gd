@@ -57,8 +57,8 @@ func build_horizontal_wall(
 ):
 	# WARNING: This consumes the tiles array! TODO send a copy, or just reference it.
 	# Two levels tall. First one has no offset because it's the "origin".
-	for level_offset in [Vector2i.ZERO, Vector2i(0, second_level_offset)]:
-		for i in wall_length:
+	for i in wall_length:
+		for level_offset in [Vector2i.ZERO, Vector2i(0, second_level_offset)]:
 			# Move each tile in the array to its spot on the wall.
 			var tile = tiles.pop_front()
 			tile.rest_point = Vector2i(x, bottom_tile_y) + x_y_offset*i + level_offset
@@ -78,8 +78,8 @@ func build_vertical_wall(
 	second_level_offset: int, 
 	x_y_offset: Vector2i
 ):
-	for level_offset in [Vector2i.ZERO, Vector2i(0, second_level_offset)]:
-		for i in wall_length:
+	for i in wall_length:
+		for level_offset in [Vector2i.ZERO, Vector2i(0, second_level_offset)]:
 			var tile = tiles.pop_front()
 			tile.rest_point = Vector2i(x, y) + x_y_offset*i + level_offset
 			
@@ -96,7 +96,7 @@ func build_wall():
 	# TODO I want this to be done when the animations finish... needs to wait on
 	# an event or something signalling that each tile is at rest.
 	
-	#get_tree().call_group("tiles", "set_faceup", false)
+	get_tree().call_group("tiles", "set_faceup", false)
 	var tiles = get_tree().get_nodes_in_group("tiles")
 	tiles.shuffle()
 	var ret = tiles.duplicate()  # TODO ugh... please for the love of god, no.
@@ -107,8 +107,8 @@ func build_wall():
 	# it's probably cheap to copy into these functions
 	# UH MAYBE NOT ACTUALLY
 	build_horizontal_wall(Common.wall_length, tiles, 325,      900-140, -20, Vector2i(52, 0)) # lower
-	build_horizontal_wall(Common.wall_length, tiles, 325,      60, -20, Vector2i(52, 0)) # upper
 	build_vertical_wall(Common.wall_length, tiles,   325-21*3,      50, -20, Vector2i(0, 52-12)) # left
+	build_horizontal_wall(Common.wall_length, tiles, 325,      60, -20, Vector2i(52, 0)) # upper
 	build_vertical_wall(Common.wall_length, tiles,   1600-325+17*3, 50, -20, Vector2i(0, 52-12)) # right
 	
 	# We need the new ordering of the tiles in further steps. Return it here
