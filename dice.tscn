@@ -24,7 +24,6 @@ offset_bottom = 13.0
 [node name="Area2D" type="Area2D" parent="." groups=["dice"]]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
-visible = false
 shape = SubResource("RectangleShape2D_ap5t4")
 
 [connection signal="gui_input" from="Control" to="." method="_on_control_gui_input"]

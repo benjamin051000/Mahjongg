@@ -66,6 +66,7 @@ func _on_input_event(viewport: Node, event: InputEvent, shape_idx: int) -> void:
 			#print("released")  # TODO this may need to be global or something
 			#selected = false
 
+# TODO why isn't this also in _on_input_event? Maybe mouse up doesn't trigger that?
 func _input(event: InputEvent):
 	if event is InputEventMouseButton:
 		if not event.pressed:

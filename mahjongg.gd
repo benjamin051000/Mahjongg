@@ -93,17 +93,26 @@ func build_vertical_wall(
 
 
 func build_wall():
+	# TODO I want this to be done when the animations finish... needs to wait on
+	# an event or something signalling that each tile is at rest.
+	
 	#get_tree().call_group("tiles", "set_faceup", false)
 	var tiles = get_tree().get_nodes_in_group("tiles")
 	tiles.shuffle()
+	var ret = tiles.duplicate()  # TODO ugh... please for the love of god, no.
 	
 	# Right now we're hard-coded to 1600x900, so assume those values when making adjustments.
 	# TODO this will certainly bite me in the ass later. Oh well :shrug:
+	# TODO Tiles is not consumed after these... I assume it's an array of refs so 
+	# it's probably cheap to copy into these functions
+	# UH MAYBE NOT ACTUALLY
 	build_horizontal_wall(Common.wall_length, tiles, 325,      900-140, -20, Vector2i(52, 0)) # lower
 	build_horizontal_wall(Common.wall_length, tiles, 325,      60, -20, Vector2i(52, 0)) # upper
 	build_vertical_wall(Common.wall_length, tiles,   325-21*3,      50, -20, Vector2i(0, 52-12)) # left
 	build_vertical_wall(Common.wall_length, tiles,   1600-325+17*3, 50, -20, Vector2i(0, 52-12)) # right
-	# TODO tiles is not consumed... I wonder how it's being passed into these funcs.
+	
+	# We need the new ordering of the tiles in further steps. Return it here
+	return ret
 
 func create_hands():
 	const hand_scene = preload("res://hand.tscn")
@@ -111,7 +120,7 @@ func create_hands():
 	your_hand.position = Vector2i(800, 855)
 	add_child(your_hand)
 
-func spawn_dice():
+func spawn_dice() -> int:
 	const dice_scene = preload("res://dice.tscn")
 	var dice: Array = [dice_scene.instantiate(), dice_scene.instantiate()]
 		
@@ -120,7 +129,18 @@ func spawn_dice():
 		dice[i].position = Vector2i(800 + 30*i, 450)
 		add_child(dice[i])
 	
-	print("Click either dice to roll them.")
+	# A simple button to replace dice functionality for now.
+	var roll_dice_btn = Button.new()
+	roll_dice_btn.text = "Roll dice"
+	roll_dice_btn.position = Vector2i(500, 400)
+	add_child(roll_dice_btn)
+	await roll_dice_btn.pressed
+	var dice_roll = randi_range(0, 12)
+	print("You rolled: ", dice_roll)
+	
+	return dice_roll
+	
+
 
 ###########################################################
 # Called when the node enters the scene tree for the first time.
@@ -132,6 +152,22 @@ func _ready():
 func _on_new_game():
 	print("[mahjongg] Starting a new game...")
 	remove_child($TitleScreen)
+	var tiles_wall_order = await build_wall()
+	# TODO this is just a bandaid solution... build_wall should probably be 
+	# awaitable and have some sort of signal that pops when it's done building.
+	await get_tree().create_timer(5).timeout
 	create_hands()
-	build_wall()
-	spawn_dice()
+	var first_col_offset = await spawn_dice()
+	deal(tiles_wall_order, first_col_offset)
+	
+func deal(tiles_wall_order: Array, first_col_offset: int):
+	# TODO the first player is always you, but it should (in the future) be the
+	# player with the highest dice roll.
+	
+	#var tiles: Array = get_tree().get_nodes_in_group("tiles")
+	for tile in tiles_wall_order:
+		tile.faceup = true
+		await get_tree().create_timer(0.25).timeout
+		#tile.faceup = false
+		#await get_tree().create_timer(0.5).timeout
+		
