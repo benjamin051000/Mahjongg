@@ -43,6 +43,9 @@ var perspective: Common.TilePerspective:
 var selected = false
 var in_hand = false
 
+# Debug flag to skip the lerping.
+const INSTANT_MOVEMENT := true
+
 var rest_point: Vector2:  # Where the tile returns when `selected == false`
 	set(new):
 		assert(Vector2.ZERO <= new and new <= Vector2(1600,900))  # TODO fetch screen size dynamically
@@ -123,14 +126,21 @@ func _on_control_gui_input(_event):
 		print("--------------------------")
 
 
+
 func _physics_process(delta):
 	if selected:
-		global_position = lerp(global_position, get_global_mouse_position(), 25 * delta)
+		if INSTANT_MOVEMENT:
+			global_position = get_global_mouse_position()
+		else:
+			global_position = lerp(global_position, get_global_mouse_position(), 25 * delta)
 		#rotation = lerp_angle(rotation, 0, 10 * delta)
 #		look_at(get_global_mouse_position())
 	#elif in_hand:
 	else:
-		global_position = lerp(global_position, rest_point, 10 * delta)
+		if INSTANT_MOVEMENT:
+			global_position = rest_point
+		else:
+			global_position = lerp(global_position, rest_point, 10 * delta)
 #		rotation = lerp_angle(rotation, 0, 10 * delta)
 
 

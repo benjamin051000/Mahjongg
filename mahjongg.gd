@@ -100,8 +100,8 @@ func build_vertical_wall(
 	var tiles_in_this_wall: Array[Node] = []
 	
 	var level_offsets = [Vector2i.ZERO, Vector2i(0, second_level_offset)]
-	if not left_not_right:
-		level_offsets.reverse()
+	#if not left_not_right:
+	level_offsets.reverse()
 	
 	for i in wall_length:
 		for level_offset in level_offsets:
@@ -126,6 +126,11 @@ func build_vertical_wall(
 		tiles_in_this_wall.reverse()
 		return tiles_in_this_wall
 	else:
+		# Extra step: we need to bring the right ones to the front.
+		for i in range(0, tiles_in_this_wall.size(), 2):
+			# Going through the even ones only
+			tiles_in_this_wall[i].bring_to_front()
+			await get_tree().process_frame
 		return tiles_in_this_wall
 
 
